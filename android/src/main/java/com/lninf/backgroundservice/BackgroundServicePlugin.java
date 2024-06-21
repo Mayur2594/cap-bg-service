@@ -1,6 +1,7 @@
 package com.lninf.backgroundservice;
 
-import com.getcapacitor.JSObject;
+import android.content.Intent;
+import androidx.annotation.NonNull;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
@@ -12,11 +13,18 @@ public class BackgroundServicePlugin extends Plugin {
     private BackgroundService implementation = new BackgroundService();
 
     @PluginMethod
-    public void echo(PluginCall call) {
-        String value = call.getString("value");
+    public void startService(PluginCall call) {
+        Context context = getContext();
+        Intent serviceIntent = new Intent(context, BackgroundFlutterService.class);
+        context.startService(serviceIntent);
+        call.resolve();
+    }
 
-        JSObject ret = new JSObject();
-        ret.put("value", implementation.echo(value));
-        call.resolve(ret);
+    @PluginMethod
+    public void stopService(PluginCall call) {
+        Context context = getContext();
+        Intent serviceIntent = new Intent(context, BackgroundFlutterService.class);
+        context.stopService(serviceIntent);
+        call.resolve();
     }
 }
